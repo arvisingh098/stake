@@ -5,7 +5,7 @@ export const UNI = {
 };
 
 export const Stake = {
-  addr: '0x08BC3A4816ae0336EACb997eC16A375FD08FeDe7',
+  addr: '0x86703a656b1F4aA2aAb5205588de68C84FCE7459',
 };
 
 export const HONEYX = {
