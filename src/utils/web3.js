@@ -5,7 +5,6 @@ import BigNumber from 'bignumber.js';
 import { notify } from './txNotifier.ts';
 const pairAbi = require('../constants/abi/UniswapV2Pair.json');
 const stakeAbi = require('../constants/abi/Stake.json');
-const ramAbi = require('../constants/abi/HoneyXToken.json');
 
 const UINT256_MAX = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
 
@@ -80,6 +79,21 @@ export const unStake = async (pool, amount, callback) => {
   const poolContract = new window.web3.eth.Contract(stakeAbi, pool);
   await poolContract.methods
     .withdraw(new BigNumber(amount).toFixed())
+    .send({
+      from: account,
+    })
+    .on('transactionHash', (hash) => {
+      notify.hash(hash);
+      callback(hash);
+    });
+};
+
+/* UNI-V2 Incentivization Pool */
+export const claimRewards = async (pool, callback) => {
+  const account = await checkConnectedAndGetAddress();
+  const poolContract = new window.web3.eth.Contract(stakeAbi, pool);
+  await poolContract.methods
+    .getReward()
     .send({
       from: account,
     })

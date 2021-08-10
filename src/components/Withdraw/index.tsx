@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 
 import BigNumber from 'bignumber.js';
 import {
-  getBalance, totalStakedFor, rewards, getTokenAllowance, rewardRate
+  getBalance, totalStakedFor, rewards, getDurationLeft, rewardRate
 } from '../../utils/infura';
 import {UNI, Stake, HONEYX} from "../../constants/tokens";
 import { toTokenUnitsBN } from '../../utils/number';
@@ -22,7 +22,7 @@ function Pool({ user }: {user: string}) {
   const [userStakedLpToken, setUserStakedLpToken] = useState(new BigNumber(0));
   const [userHONEYXToken, setHONEYXToken] = useState(new BigNumber(0));
   const [userEarnedToken, setEarnedToken] = useState(new BigNumber(0));
-  const [userESDAllowance, setUserESDAllowance] = useState(new BigNumber(0));
+  const [durationLeftNew, setDurationLeft] = useState(new BigNumber(0));
   const [rewardRatePer, setrewardRate] = useState(new BigNumber(0));
 
   useEffect(() => {
@@ -59,20 +59,20 @@ function Pool({ user }: {user: string}) {
       setUserStakedLpToken(new BigNumber(0));
       setHONEYXToken(new BigNumber(0));
       setEarnedToken(new BigNumber(0));
-      setUserESDAllowance(new BigNumber(0));
+      setDurationLeft(new BigNumber(0));
       return;
     }
     let isCancelled = false;
 
     async function updateUserInfo() {
       const [
-        lpTokens, stakedAmount, HONEYXToken, earnedAmount, esdAllowance,
+        lpTokens, stakedAmount, HONEYXToken, earnedAmount, durationLeft,
       ] = await Promise.all([
         getBalance(UNI.addr, user),
         totalStakedFor(Stake.addr, user),
         getBalance(HONEYX.addr, user),
         rewards(Stake.addr, user),
-        getTokenAllowance(HONEYX.addr, user, Stake.addr),
+        getDurationLeft(),
       ]);
 
       const userLpToken = toTokenUnitsBN(lpTokens, UNI.decimals);
@@ -85,11 +85,11 @@ function Pool({ user }: {user: string}) {
         setUserStakedLpToken(new BigNumber(userStakedLpToken));
         setHONEYXToken(new BigNumber(userHONEYXToken));
         setEarnedToken(new BigNumber(userEarnedToken));
-        setUserESDAllowance(new BigNumber(esdAllowance));
+        setDurationLeft(new BigNumber(durationLeft));
       }
     }
     updateUserInfo();
-    const id = setInterval(updateUserInfo, 15000);
+    const id = setInterval(updateUserInfo, 1000);
 
     // eslint-disable-next-line consistent-return
     return () => {
@@ -110,6 +110,7 @@ function Pool({ user }: {user: string}) {
 
       <WithdrawDeposit
         userStakedLpToken={userStakedLpToken}
+        durationLeftNew={durationLeftNew}
         user={user}
       />
     </>

@@ -15,16 +15,16 @@ const AccountPageHeader = ({
 }: AccountPageHeaderProps) => (
   <div style={{ padding: '2%', display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
     <div style={{ flexBasis: '25%' }}>
-      <BalanceBlock asset="Reward Rate" balance={rewardRatePer} suffix={" HoneyX"}/>
+      <BalanceBlock asset="Reward Rate Per Second" balance={rewardRatePer} suffix={" HoneyX"}/>
     </div>
     <div style={{ flexBasis: '25%' }}>
-      <BalanceBlock asset="Wallet Balance" balance={userLpToken} suffix={" BNB-HONEYX"}/>
+      <BalanceBlock asset="Wallet LP Balance" balance={userLpToken} suffix={" BNB-HONEYX"}/>
     </div>
     <div style={{ flexBasis: '25%' }}>
-      <BalanceBlock asset="HONEYX" balance={userHONEYXToken} suffix={" HONEYX"} />
+      <BalanceBlock asset="Wallet HONEYX Balance" balance={userHONEYXToken} suffix={" HONEYX"} />
     </div>
     <div style={{ flexBasis: '25%' }}>
-      <BalanceBlock asset="Earned Amount" balance={userEarnedToken}  suffix={" HONEYX"}/>
+      <BalanceBlock asset="Earned Amount(Claimable After Program)" balance={userEarnedToken}  suffix={" HONEYX"}/>
     </div>
   </div>
 );

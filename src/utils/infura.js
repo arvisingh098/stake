@@ -70,3 +70,9 @@ export const rewardRate = async () => {
   const _rewardRate = await poolContract.methods.rewardRate().call();
   return _rewardRate;
 };
+
+export const getDurationLeft = async () => {
+  const poolContract = new window.web3.eth.Contract(stakeAbi, Stake.addr);
+  const _duration = await poolContract.methods.durationLeft().call();
+  return _duration;
+};

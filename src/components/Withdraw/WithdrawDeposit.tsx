@@ -1,23 +1,24 @@
 import React, { useState } from 'react';
 import {
-  Box, Button, IconCirclePlus
+  Box, Button, IconCirclePlus, Modal
 } from '@aragon/ui';
 import BigNumber from 'bignumber.js';
 import {
   BalanceBlock, MaxButton,
 } from '../common/index';
-import {unStake} from '../../utils/web3';
+import {unStake, claimRewards} from '../../utils/web3';
 import {isPos, toBaseUnitBN} from '../../utils/number';
 import {Stake, UNI} from "../../constants/tokens";
 import BigNumberInput from "../common/BigNumberInput";
 
 type WithdrawDepositProps = {
   userStakedLpToken: BigNumber
+  durationLeftNew: BigNumber
   user: string
 };
 
 function WithdrawDeposit({
-  userStakedLpToken
+  userStakedLpToken, durationLeftNew
 }: WithdrawDepositProps) {
   const [depositAmount, setDepositAmount] = useState(new BigNumber(0));
 
@@ -31,7 +32,7 @@ function WithdrawDeposit({
           {/* Deposit UNI-V2 into Pool */}
           <div style={{flexBasis: '50%', paddingTop: '2%'}}>
             <div style={{display: 'flex'}}>
-              <div style={{width: '60%', minWidth: '6em'}}>
+              <div style={{width: '50%', minWidth: '6em'}}>
                 <>
                   <BigNumberInput
                     adornment="LP"
@@ -46,7 +47,7 @@ function WithdrawDeposit({
                   />
                 </>
               </div>
-              <div style={{width: '40%', minWidth: '7em'}}>
+              <div style={{width: '25%', minWidth: '7em'}}>
                 <Button
                   wide
                   icon={<IconCirclePlus/>}
@@ -61,6 +62,19 @@ function WithdrawDeposit({
                   disabled={Stake.addr === '' || !isPos(depositAmount)}
                 />
               </div>
+              <div style={{width: '25%', paddingLeft: '3%'}}>
+                <Button
+                  wide
+                  label="Claim Reward"
+                  onClick={ durationLeftNew.comparedTo(0) === 0 ? () => {
+                    claimRewards(
+                      Stake.addr,
+                      (hash) => setDepositAmount(new BigNumber(0))
+                    );
+                  } : () => {alertDuration();}}
+                  disabled={Stake.addr === ''}
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -69,3 +83,7 @@ function WithdrawDeposit({
 }
 
 export default WithdrawDeposit;
+
+export const alertDuration = async () => {
+  window.confirm("Not able to claim rewrads. Please try after program end.");
+};

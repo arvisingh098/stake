@@ -89,7 +89,7 @@ function Wallet({ user }: {user: string}) {
       }
     }
     updateUserInfo();
-    const id = setInterval(updateUserInfo, 15000);
+    const id = setInterval(updateUserInfo, 1000);
 
     // eslint-disable-next-line consistent-return
     return () => {
